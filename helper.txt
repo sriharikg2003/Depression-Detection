@@ -1,0 +1,4 @@
+
+To remove from inner folders and put in the root folder
+find ./* -type f -exec mv {} . \;
+

@@ -71,10 +71,10 @@ def playAudio(path):
 
 
 EATD = {
-    "TRAIN_D": {"src": "TrainPHQ8/Train_D/", "Storage" : [], "Code" : 1},
-    "TRAIN_ND": {"src":  "TrainPHQ8/Train_ND/", "Storage" :[] ,"Code" : 0},
-    "TEST_D": {"src":"TestPHQ8/Test_D/", "Storage": [],"Code" : 1},
-    "TEST_ND": {"src": "TestPHQ8/Test_ND/", "Storage": [],"Code" : 0}
+    "TRAIN_D": {"src": "Above_3_seconds/Train/Train_D/", "Storage" : [], "Code" : 1},
+    "TRAIN_ND": {"src":  "Above_3_seconds/Train/Train_ND/", "Storage" :[] ,"Code" : 0},
+    "TEST_D": {"src":"Above_3_seconds/Test/Test_D/", "Storage": [],"Code" : 1},
+    "TEST_ND": {"src": "Above_3_seconds/Test/Test_ND/", "Storage": [],"Code" : 0}
 }
 for key in EATD.keys():
     EATD[key]["Storage"] =  glob.glob(EATD[key]["src"] + "*")
@@ -139,16 +139,16 @@ save_path = "Mod_Spec_Images/"
 win_sizes = [0.025,0.4,0.8]
 name_of_file = [str(x) for x in win_sizes]
 for i in range(3):
-    print("Saving as  "+  'PHQ8_0_'+name_of_file[i].split(".")[-1]+'.pkl')
-
+    print("Saving as  "+  'Above_3_seconds_0_'+name_of_file[i].split(".")[-1]+'.pkl')
+    print("Saving as " + 'Above_3_seconds_0_'+name_of_file[i].split(".")[-1]+'.pkl')
     eatd_df_train_win_sizes ,eatd_df_test_win_sizes = generate_df (EATD,win_size_sec=win_sizes[i])
     eatd_df_train_win_sizes = pd.DataFrame(eatd_df_train_win_sizes)
     eatd_df_test_win_sizes = pd.DataFrame(eatd_df_test_win_sizes)
-    with open(save_path + 'PHQ8_train_0_'+name_of_file[i].split(".")[-1]+'.pkl', 'wb') as f:
+    with open(save_path + 'Above_3_seconds_train_0_'+name_of_file[i].split(".")[-1]+'.pkl', 'wb') as f:
         pickle.dump(eatd_df_train_win_sizes, f)
 
-    with open(save_path + 'PHQ8_test_0_'+name_of_file[i].split(".")[-1]+'.pkl', 'wb') as f:
+    with open(save_path + 'Above_3_seconds_test_0_'+name_of_file[i].split(".")[-1]+'.pkl', 'wb') as f:
         pickle.dump(eatd_df_test_win_sizes, f)
-
-    print("Saved" + 'PHQ8_0_'+name_of_file[i].split(".")[-1]+'.pkl')
+    print("Saved "+  'Above_3_seconds_0_'+name_of_file[i].split(".")[-1]+'.pkl')
+    print("Saved" + 'Above_3_seconds_0_'+name_of_file[i].split(".")[-1]+'.pkl')
 print("Done")
