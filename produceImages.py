@@ -52,7 +52,8 @@ def specImage(filename,win_size_sec=0.04):
 
     # Remove the alpha channel to get a 3D array
     plot_data_rgb = plot_data_rgba[:, :, :3]
-
+    plt.plot(plot_data_rgb)
+    plt.show()
     return plot_data_rgb
 def ssimFromAudio(filepath1, filepath2,win_size=11):
     img1 = specImage(filepath1)
@@ -67,7 +68,7 @@ def ssimFromImage(img1, img2,win_size=11):
 
 def playAudio(path):
     return Audio(path)
-# filepath1 = "TrainPHQ8/TrainPHQ8/train_depreesed/F_D_321(PHQ8-20)/321_21.wav"
+filepath1 = "TrainPHQ8/TrainPHQ8/train_depreesed/F_D_321(PHQ8-20)/321_21.wav"
 
 
 EATD = {
@@ -131,6 +132,8 @@ import pickle
 
 # load_path = ""
 save_path = "Mod_Spec_Images/"
+
+specImage(filepath1)
 
 # Assuming you have already loaded your data into eatd_df_train and eatd_df_test
 

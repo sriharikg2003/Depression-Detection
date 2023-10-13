@@ -73,30 +73,6 @@ def playAudio(path):
 # filepath1 = "TrainPHQ8/TrainPHQ8/train_depreesed/F_D_321(PHQ8-20)/321_21.wav"
 
 
-
-def SavespecImage(filename,win_size_sec=0.04,opath=""):
-    fs, x = wavfile.read(filename)
-    x_name = ['speech']
-    x = x / np.max(x)
-    # 1s segment to analyze
-    # x = x[int(fs*1.6) : int(fs*3.6)]
-
-    X_data = modSpec(x, fs,win_size_sec)
-
-    ama.plot_modulation_spectrogram_data(X_data,
-                                         0,
-                                         modf_range=np.array([0, 20]),
-                                         c_range=np.array([-90, -50]))
-
-    # Get the current figure and convert it to a 3D array
-    fig = plt.gcf()
-    fig.canvas.draw()
-    # print("////////////PLOT READY")
-    plt.savefig(opath)
-    plt.close()
-
-    return 
-
 EATD = {
     "TRAIN_D": {"src": "Above_3_seconds/Train/Train_D/", "Storage" : [], "Code" : 1},
     "TRAIN_ND": {"src":  "Above_3_seconds/Train/Train_ND/", "Storage" :[] ,"Code" : 0},
@@ -111,17 +87,17 @@ def generate_df(EATD, win_size_sec=0.04):
     EATD_SPEC_TRAIN = []
     EATD_SPEC_TEST = []
 
-# for key in EATD.keys():
-    column = "TEST_ND"
-    code_value = EATD[column]['Code']
+    for key in EATD.keys():
+        column = key
+        code_value = EATD[column]['Code']
 
-    for i in tqdm(EATD[column]['Storage']):
-        img = specImage(i, win_size_sec)
-        if img is not None:  # Check if an image was successfully generated
-            if column.startswith('TRAIN'):
-                EATD_SPEC_TRAIN.append({"Image": img, "Code": code_value})
-            elif column.startswith('TEST'):
-                EATD_SPEC_TEST.append({"Image": img, "Code": code_value})
+        for i in tqdm(EATD[column]['Storage']):
+            img = specImage(i, win_size_sec)
+            if img is not None:  # Check if an image was successfully generated
+                if column.startswith('TRAIN'):
+                    EATD_SPEC_TRAIN.append({"Image": img, "Code": code_value})
+                elif column.startswith('TEST'):
+                    EATD_SPEC_TEST.append({"Image": img, "Code": code_value})
 
     return EATD_SPEC_TRAIN, EATD_SPEC_TEST
 
@@ -138,44 +114,21 @@ save_path = "Mod_Spec_Images/"
 # Saving dataframes
 
 # Modify the loop to handle different window sizes
-# win_sizes = [0.8]  # Adjust the window sizes as needed
-# name_of_file = [str(x) for x in win_sizes]
+win_sizes = [ 0.4]  # Adjust the window sizes as needed
+name_of_file = [str(x) for x in win_sizes]
 
-# for i in range(len(win_sizes)):
-#     print(f'Above_3_seconds_test_ND_0_{name_of_file[i].split(".")[-1]}.pkl')
+for i in range(len(win_sizes)):
+    print(f"Saving as 'Above_3_seconds_0_{name_of_file[i].split('.')[-1]}.pkl'")
+    eatd_df_train_win_sizes, eatd_df_test_win_sizes = generate_df(EATD, win_size_sec=win_sizes[i])
+    eatd_df_train_win_sizes = pd.DataFrame(eatd_df_train_win_sizes)
+    eatd_df_test_win_sizes = pd.DataFrame(eatd_df_test_win_sizes)
 
-#     eatd_df_train_win_sizes, eatd_df_test_win_sizes = generate_df(EATD, win_size_sec=win_sizes[i])
-#     # eatd_df_train_win_sizes = pd.DataFrame(eatd_df_train_win_sizes)
-#     eatd_df_test_win_sizes = pd.DataFrame(eatd_df_test_win_sizes)
+    with open(save_path + f'Above_3_seconds_train_0_{name_of_file[i].split(".")[-1]}.pkl', 'wb') as f:
+        pickle.dump(eatd_df_train_win_sizes, f)
 
-#     # with open(save_path + f'Above_3_seconds_train_ND_0_1000_0_{name_of_file[i].split(".")[-1]}.pkl', 'wb') as f:
-#     #     pickle.dump(eatd_df_train_win_sizes, f)
+    with open(save_path + f'Above_3_seconds_test_0_{name_of_file[i].split(".")[-1]}.pkl', 'wb') as f:
+        pickle.dump(eatd_df_test_win_sizes, f)
 
-#     with open(save_path + f'Above_3_seconds_test_ND_0_{name_of_file[i].split(".")[-1]}.pkl', 'wb') as f:
-#         pickle.dump(eatd_df_test_win_sizes, f)
-
+    print(f"Saved 'Above_3_seconds_0_{name_of_file[i].split('.')[-1]}.pkl'")
     
-# print("Done")
-
-import os
-column = "TEST_ND"
-code_value = EATD[column]['Code']
-c = 0  # Initialize a counter
-output_directory = "IMAGES/PHQ8/TEST_ND"
-os.makedirs(output_directory, exist_ok=True)
-
-for i in tqdm(EATD["TEST_ND"]['Storage']):
-    output_path = os.path.join(output_directory, f"{c}.png")
-    SavespecImage(i, opath=output_path)
-    c += 1
-
-
-# for i in tqdm(EATD["TEST_ND"]['Storage']):
-#     SavespecImage(i,opath  = i+".png")
-
-
-# for i in tqdm(EATD["TEST_D"]['Storage']):
-#     SavespecImage(i,opath  = i+".png")
-
-# for i in tqdm(EATD["TEST_ND"]['Storage']):
-#     SavespecImage(i,opath  = i+".png")
+print("Done")
